@@ -4,7 +4,7 @@ pipeline {
     stages {
         stage('Clone') {
             steps {
-                git branch: 'main', url: 'https://github.com/godardth/typescript-fullstack-boilerplate.git'
+                git branch: 'main', url: 'https://github.com/olmayo/checkedhub.git'
             }
         }
         stage('Configure') {
@@ -18,8 +18,8 @@ pipeline {
         stage('Build') {
             steps {
                 script {
-                    api = docker.build('app/api:latest', './api')
-                    web = docker.build('app/web:latest', './web')
+                    api = docker.build('checkedhub/api:latest', './api')
+                    web = docker.build('checkedhub/web:latest', './web')
                 }
             }
         }
