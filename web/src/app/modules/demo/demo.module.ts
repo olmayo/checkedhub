@@ -8,10 +8,11 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { HomeComponent } from './components/home/home.component';
 import { DemoComponent } from './components/demo/demo.component';
+import { PlaceFinderComponent } from './components/place-finder/place-finder.component';
 import { ProfileComponent } from './components/profile/profile.component';
 import { ChatComponent } from './components/chat/chat.component';
-import { TaskComponent } from './components/task/task.component';
-import { TasksService } from './services/tasks.service';
+import { ExperiencesService } from './services/experience.service';
+import { MapComponent } from './components/map/map.component';
 
 @NgModule({
   imports: [
@@ -26,13 +27,14 @@ import { TasksService } from './services/tasks.service';
   ],
   declarations: [
     ChatComponent,
-    TaskComponent,
     DemoComponent,
     HomeComponent,
+    MapComponent,
+    PlaceFinderComponent,
     ProfileComponent
   ],
   providers: [
-    TasksService
+    ExperiencesService
   ]
 })
 export class DemoModule { }

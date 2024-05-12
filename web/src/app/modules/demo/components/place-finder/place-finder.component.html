@@ -1,0 +1,23 @@
+<div class="search-form">
+    <div><input type="text" [(ngModel)]="query"/></div>
+    <button (click)="search(query)">Search</button>
+</div>
+
+<div class="results" *ngIf="!place">
+    <div class="result" *ngFor="let place of places" (click)="select(place)">
+        <div class="name">{{ place.displayName }}</div>
+        <div class="name">{{ place.types[0] }}</div>
+        <div class="name">{{ place.location }}</div>
+        <div class="name">{{ place.formattedAddress }}</div>
+    </div>
+</div>
+
+<div class="result" *ngIf="place">
+    <div class="name">{{ place.displayName }}</div>
+    <div class="name">{{ place.types[0] }}</div>
+    <div class="name">{{ place.location }}</div>
+    <div class="name">{{ place.formattedAddress }}</div>
+</div>
+
+
+

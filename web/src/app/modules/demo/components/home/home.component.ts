@@ -9,5 +9,5 @@ import { faGithub } from '@fortawesome/free-brands-svg-icons';
 export class HomeComponent {
 
   faGithub = faGithub;
-  
+
 }

@@ -12,17 +12,24 @@ services:
       - POSTGRES_DB=${DATABASE_NAME}
       - POSTGRES_USER=${DATABASE_USER}
       - POSTGRES_PASSWORD=${DATABASE_PASSWORD}
-
+  
   api:
-    build: ./api
-    command: sh -c 'cd api; ./configure.sh; npm run start:debug'
+    build:
+      context: ./api
+    command: bash -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
     ports:
-      - ${BACKEND_PORT}:${BACKEND_PORT}
-      - 9229:9229
-    volumes:
-      - ./:/usr/src/app/dev
+      - 8000:8000
+      - 6900:6900
+    environment:
+      - DEBUG=True
+      - POSTGRES_HOST=${DATABASE_HOST}
+      - POSTGRES_NAME=${DATABASE_NAME}
+      - POSTGRES_USER=${DATABASE_USER}
+      - POSTGRES_PASSWORD=${DATABASE_PASSWORD}
     depends_on:
       - db
+    volumes:
+      - ./api:/code
 
   web:
     build: 

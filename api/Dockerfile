@@ -1,15 +1,15 @@
-FROM node:18
+# syntax=docker/dockerfile:1
+FROM --platform=linux/amd64 python:3.12
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
 
-# Install Dependencies
-WORKDIR /usr/src/app/dev
-COPY package*.json ./
-RUN npm i -g @nestjs/cli
-RUN npm install --quiet
+# virtual environment
+ENV VIRTUAL_ENV=/opt/venv
+RUN python3 -m venv $VIRTUAL_ENV
+ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 
-# Copy Source Code & Build
-COPY . .
-RUN npm run build
+COPY . /code/
 
-# Start Production Server
-EXPOSE 3000
-CMD ["npm", "run", "start:prod"]
+WORKDIR /code
+COPY requirements.txt /code/
+RUN pip install --upgrade --no-cache-dir -r requirements.txt
