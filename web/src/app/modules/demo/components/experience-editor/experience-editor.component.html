@@ -1,0 +1,41 @@
+<!-- Event vs Journey -->
+<div class="section">
+    <div class="content">
+        <div class="options">
+            <div class="option" 
+                [ngClass]="{'selected': experience.isJourney==false}"
+                (click)="experience.isJourney = false">
+                <i class="fa-solid fa-location-dot"></i>
+                <div class="caption">Event</div>
+            </div>
+            <div class="option" 
+                [ngClass]="{'selected': experience.isJourney==true}"
+                (click)="experience.isJourney = true">
+                <i class="fa-solid fa-suitcase"></i>
+                <div class="caption">Journey</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Event Location -->
+<div class="section" *ngIf="experience.isJourney === false">
+    <div class="header">
+        <div class="text">Location</div>
+    </div>
+    <div class="content">
+        <app-place-finder [(ngModel)]="experience.place"></app-place-finder>
+        {{ experience.place?.name }}
+    </div>
+</div>
+
+<!-- Journey Details -->
+<div class="section" *ngIf="experience.isJourney === true">
+    <div class="header">
+        <div class="text">Departure & Arrival</div>
+    </div>
+    <div class="content">
+        <app-place-finder [(ngModel)]="experience.place"></app-place-finder>
+        <app-place-finder [(ngModel)]="experience.place"></app-place-finder>
+    </div>
+</div>

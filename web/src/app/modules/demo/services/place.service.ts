@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Place } from '../models/place';
+import { PointOfInterest } from '../models/point-of-interest';
 import { CrudService } from '../../api/crud.service';
 
 @Injectable({
@@ -8,6 +8,6 @@ import { CrudService } from '../../api/crud.service';
 export class PlacesService extends CrudService {
 
   override endpoint?: string = 'places';
-  override model?: any = Place;
+  override model?: any = PointOfInterest;
 
 }

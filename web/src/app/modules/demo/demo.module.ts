@@ -9,6 +9,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { HomeComponent } from './components/home/home.component';
 import { DemoComponent } from './components/demo/demo.component';
 import { PlaceFinderComponent } from './components/place-finder/place-finder.component';
+import { ExperienceEditorComponent } from './components/experience-editor/experience-editor.component';
 import { ProfileComponent } from './components/profile/profile.component';
 import { ChatComponent } from './components/chat/chat.component';
 import { ExperiencesService } from './services/experience.service';
@@ -28,6 +29,7 @@ import { MapComponent } from './components/map/map.component';
   declarations: [
     ChatComponent,
     DemoComponent,
+    ExperienceEditorComponent,
     HomeComponent,
     MapComponent,
     PlaceFinderComponent,

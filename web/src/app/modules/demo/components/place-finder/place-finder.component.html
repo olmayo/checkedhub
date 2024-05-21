@@ -5,18 +5,24 @@
 
 <div class="results" *ngIf="!place">
     <div class="result" *ngFor="let place of places" (click)="select(place)">
-        <div class="name">{{ place.displayName }}</div>
-        <div class="name">{{ place.types[0] }}</div>
-        <div class="name">{{ place.location }}</div>
-        <div class="name">{{ place.formattedAddress }}</div>
+        <div class="icon">
+            <i class="fa-solid fa-{{ place.icon }}"></i>
+        </div>
+        <div class="description">
+            <div class="name">{{ place.name }}</div>
+            <div class="address">{{ place.formattedAddress }}</div>
+        </div>
     </div>
 </div>
 
 <div class="result" *ngIf="place">
-    <div class="name">{{ place.displayName }}</div>
-    <div class="name">{{ place.types[0] }}</div>
-    <div class="name">{{ place.location }}</div>
-    <div class="name">{{ place.formattedAddress }}</div>
+    <div class="icon">
+        <i class="fa-solid fa-{{ place.icon }}"></i>
+    </div>
+    <div class="description">
+        <div class="name">{{ place.name }}</div>
+        <div class="address">{{ place.formattedAddress }}</div>
+    </div>
 </div>
 
 

@@ -1,6 +1,5 @@
 import { Component, ElementRef, ViewChild, OnInit, AfterViewInit } from '@angular/core';
 import { Loader } from "@googlemaps/js-api-loader";
-import { Experience } from '../../models/experience';
 import { ExperiencesService } from '../../services/experience.service';
 import { PlacesService } from '../../services/place.service';
 
@@ -31,20 +30,21 @@ export class MapComponent implements OnInit, AfterViewInit {
   mapInitializer() {
     const loader = new Loader({
       apiKey: "AIzaSyAKS6nVQRipLHPqBa90uKbkq3Ljs-gMzGI",
-      version: "weekly"
+      version: "weekly",
+      libraries: ["geometry"]
     });
     loader.load().then(async () => {
       const { Map } = await google.maps.importLibrary("maps") as google.maps.MapsLibrary;
       this.map = new Map(document.getElementById("map") as HTMLElement, {
         center: { lat: -34.397, lng: 150.644 },
-        zoom: 8,
+        zoom: 2
       });
       this.experiencesService.get().subscribe((experiences: any) => {
         console.log(experiences);
         experiences.forEach((experience: any) => {
           if (experience.place) this.drawMarker(experience.place.latitude, experience.place.longitude);
+          if (experience.polyline) this.drawPolyline(experience.polyline);
         });
-
       });
     });
   }
@@ -63,31 +63,9 @@ export class MapComponent implements OnInit, AfterViewInit {
       geodesic: true,
       strokeColor: "#FF0000",
       strokeOpacity: 1.0,
-      strokeWeight: 2,
+      strokeWeight: 2
     });
     route.setMap(this.map!);
   }
-
-  // route() {
-  //   let directionsService = new google.maps.DirectionsService();
-  //   let directionsRenderer = new google.maps.DirectionsRenderer();
-  //   directionsRenderer.setMap(this.map!);
-
-  //   // Request directions
-  //   directionsService.route(
-  //     {
-  //       origin: new google.maps.LatLng(40.7128, -74.006),
-  //       destination: new google.maps.LatLng(34.0522, -118.2437),
-  //       travelMode: google.maps.TravelMode.DRIVING,
-  //     },
-  //     (response, status) => {
-  //       if (status === google.maps.DirectionsStatus.OK) {
-  //         this.savedRoute = response?.routes[0].overview_polyline;
-  //       } else {
-  //         window.alert("Directions request failed due to " + status);
-  //       }
-  //     }
-  //   );
-  // }
 
 }

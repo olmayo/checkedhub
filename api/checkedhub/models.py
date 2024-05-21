@@ -29,6 +29,7 @@ class Experience(PolymorphicModel):
 
 
 class Event(Experience):
+    place = models.ForeignKey(Place, on_delete=models.CASCADE)
     class Meta:
         abstract = True
 
