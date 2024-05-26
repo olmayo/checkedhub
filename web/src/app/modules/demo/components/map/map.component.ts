@@ -20,7 +20,7 @@ export class MapComponent implements OnInit, AfterViewInit {
   ) {}
 
   ngOnInit(): void {
-    this.placesService.get().subscribe((x: any) => console.log(x));
+    this.placesService.get().subscribe();
   }
 
   ngAfterViewInit() {

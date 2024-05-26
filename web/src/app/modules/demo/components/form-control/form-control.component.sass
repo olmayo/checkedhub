@@ -1,0 +1,452 @@
+:host
+  flex-grow: 0
+  gap: 40px
+  
+.input-block
+  width: 100%
+  //height: 100%
+  mat-form-field
+    width: 100%
+  .input-group
+    position: relative
+    .label
+      position: absolute
+      top: 20px
+      color: grey
+      cursor: text
+      transition: all 0.15s ease-in-out
+    .error
+      color: red
+      font-size: 0.8rem
+      font-weight: 600
+    input
+      margin-top: 20px
+      border: none
+      border-bottom: 1px solid grey
+      padding-bottom: 5px
+      outline: none
+      width: 100%
+    input:focus + .label, .label.not-empty
+      top: 0px
+      font-size: 0.8rem
+    input:focus 
+      border-color: blue
+      + .label
+        color: blue
+
+input[type="number"]
+  width: calc(100% - 8px)
+
+.editable-text
+  display: flex
+  input
+    border: none
+    padding: 0
+    font-size: 1.2rem
+    font-family: inherit
+    height: 32px
+    width: 100%
+    background: transparent
+    &:focus
+      background: transparent
+      border-radius: 0
+      border-bottom: 1px solid #007bff
+      outline: none
+  .button
+    background-color: transparent
+    color: transparent
+    border-radius: 0
+    border-color: transparent
+    cursor: default
+  input:focus + .button
+    background-color: #007bff
+    border-color: #007bff
+    color: #FFF
+    cursor: pointer
+
+.inline-search
+  .options
+    padding: 5px 0
+    margin-top: 3px
+    .table
+      width: 100%
+      tbody tr
+        cursor: pointer
+
+
+.validated-input
+  position: relative
+  .action-btn
+    position: absolute
+    right: 0
+    top: 15px
+    .btn
+      background-color: transparent
+      &.disabled
+        cursor: default
+
+.number-plus-minus
+  display: flex
+  flex-direction: column
+  align-items: center
+  &.horizontal
+    flex-direction: row-reverse
+  input
+    width: 40px
+    border: none
+    font-size: 14px
+    text-align: center
+    background: transparent
+    -moz-appearance: textfield
+    &::-webkit-outer-spin-button,
+    &::-webkit-inner-spin-button
+      -webkit-appearance: none
+      margin: 0
+
+.time-field
+  display: flex
+  .label
+    min-width: 50px
+  &.inline
+    flex-direction: column
+    .label
+      min-width: 30px
+      text-align: center
+      border-bottom: 1px solid #ebebeb
+  .value-container
+    display: flex
+    align-items: center
+    input::ng-deep
+      width: 25px
+    .am-pm
+      width: 25px
+      display: flex
+      flex-direction: column
+      align-items: center
+
+.time-range-field
+  display: flex
+  flex-direction: column
+  justify-content: space-around
+  height: 100%
+  gap: 30px
+
+.btn-icon
+  display: flex
+  align-items: center
+  justify-content: center
+  height: 26px
+  width: 26px
+  border-radius: 13px
+  cursor: pointer
+  &:hover
+    background: #b4bad8
+
+.date-time-range
+  display: flex
+  flex-direction: column
+  justify-content: space-around
+  .date-timerange, .dual-datetime
+    display: flex
+    justify-content: center
+    gap: 45px
+
+.slide-toggle
+  margin-bottom: 15px
+
+.slider-container
+  width: 100%
+  mat-slider
+    width: 100%
+
+.checkboxes
+  display: flex
+  flex-direction: column
+
+.toggles
+  display: flex
+  flex-direction: row
+  align-items: baseline
+  margin-bottom: 15px
+  .label
+    margin-right: 20px
+
+.user
+  position: relative
+  .user-options
+    position: absolute
+    top: 30px
+    min-width: 100%
+    max-height: 150px
+    overflow-y: scroll
+    border: 1px solid #0000001f
+    background: #dee2e6
+    border-bottom-left-radius: 5px
+    border-bottom-right-radius: 5px
+    div
+      padding: 5px
+      font-style: italic
+    .table
+      margin: 0
+      tr
+        cursor: pointer
+
+.select, .select-option
+  text-transform: capitalize
+
+.radio
+  display: flex
+  flex-direction: column
+  .radio-group
+    display: flex
+    flex-direction: column
+    margin: 15px 0
+    align-items: flex-start
+    .radio-button
+      margin: 5px
+
+.badges
+  display: flex
+  flex-direction: column
+  position: relative
+  .badge
+    margin: 5px
+    text-transform: uppercase
+    width: auto
+    cursor: pointer
+    &.hidden
+      display: none
+
+.calendar-container
+  width: 230px
+  text-align: center
+  display: flex
+  flex-direction: column
+  &.horizontal
+    flex-direction: row
+    align-items: flex-start
+    margin: 0
+    .time
+      flex-direction: column
+      margin-left: 50px
+  .calendar-label
+    border-bottom: 1px solid #ebebeb
+  .time
+    display: flex
+    flex-direction: row
+    justify-content: center
+    align-items: center
+    .all-day
+      margin-right: 20px
+    .hour-minute
+      display: flex
+      flex-direction: row
+      align-items: center
+      &.hidden
+        visibility: hidden
+
+
+$scheduler-box-background: #f8f9fa
+$scheduler-box-border: #e9ecef
+
+.date-start, .date-end
+  position: absolute
+  top: 78px
+.date-start
+  left: 10px
+.date-end
+  right: 10px
+
+.scheduler
+  .scheduler-container
+    position: relative
+    height: 155px
+    .timeline-container
+      position: relative
+      .timeline
+        position: absolute
+        top: 63px
+        height: 1px
+        width: 100%
+        background-color: #6c757d
+        border-radius: 1px
+        &::after, &::before
+          content: ""
+          position: absolute
+          right: 0
+          background: #6c757d
+          width: 0.7em
+          height: 0.2em
+          border-radius: 1em
+          top: 50%
+        &::after
+          transform: translate(0, -0.05em) rotate(45deg)
+          transform-origin: 100% 50%
+        &::before
+          transform: translate(0, -0.15em) rotate(-45deg)
+          transform-origin: 100% 50%
+      .circle
+        position: absolute
+        top: 56px
+        content: ' '
+        background: #6c757d
+        border: 4px solid #FFFFFF
+        width: 8px
+        height: 8px
+        border-radius: 8px
+        &.circle-left
+          left: 60px
+        &.circle-right
+          right: 60px
+      .now-marker
+        position: absolute
+        top: 55px
+        color: #FFFFFF
+        background: #343a40
+        font-size: 10px
+        font-weight: 700
+        padding: 1px 3px
+        border-radius: 5px
+        width: 32px
+
+    .date, .progress-slider
+      position: absolute
+      cursor: pointer
+      z-index: 3
+      padding: 5px 10px
+      border: 1px solid $scheduler-box-border
+      border-radius: 5px
+      background: $scheduler-box-background
+      &:before, &:after
+        border: solid transparent
+        content: ""
+        height: 0
+        width: 0
+        position: absolute
+        pointer-events: none
+      &:after
+        border-color: transparent
+        border-width: 7px
+        margin-left: -7px
+      &:before
+        border-color: rgba(194, 225, 245, 0)
+        border-width: 8px
+        margin-left: -8px
+      &.start
+        left: 10px
+        &:before
+          left: 64px
+        &:after
+          left: 64px
+      &.end
+        right: 10px
+        &:before
+          right: 64px
+        &:after
+          right: 65px
+    .date
+      top: 68px
+      width: auto
+      height: auto
+      transition: all 0.5s ease
+      &:before, &:after
+        bottom: 100%
+      &:after
+        border-bottom-color: $scheduler-box-background
+      &:before
+        border-bottom-color: $scheduler-box-border
+
+      .editor
+        .header
+          text-align: center
+          font-size: 14px
+          margin-top: 10px
+
+    .progress-slider
+      top: 5px
+      width: 64px
+      white-space: nowrap
+      text-align: center
+      color: #343a40
+      &.disabled
+        cursor: not-allowed
+      .slider-title
+        text-transform: uppercase
+        font-weight: 600
+        font-size: 11px
+      .slider-value
+        font-size: 16px
+        line-height: 16px
+      &:before, &:after
+        top: 100%
+        left: 50%
+      &:after
+        border-top-color: $scheduler-box-background
+      &:before
+        border-top-color: $scheduler-box-border
+
+  &.progress-hidden
+    .scheduler-container
+      height: 105px
+      .timeline-container
+        .timeline
+          top: 13px
+        .circle
+          top: 6px
+        .now-marker
+          top: 5px
+      .date-start, .date-end
+        top: 28px
+
+// Dropdown Styling
+.dropdown
+  display: flex
+  flex-direction: column
+  align-items: flex-start
+  position: relative
+  .button
+    .caption
+      position: relative
+      left: 10px
+      transition: left 0.15s ease-in-out 0.15s
+    .icon .fa
+      margin: 0 0 0 7px
+      opacity: 0
+      transition: opacity 0.15s ease-in-out 
+    &.isOpen
+      border-bottom-left-radius: 0
+      border-bottom-right-radius: 0
+    &:hover, &.isOpen
+      .caption
+        left: 0
+        transition: left 0.15s ease-in-out 
+      .icon .fa
+        opacity: 1
+        transition: opacity 0.15s ease-in-out 0.15s
+  .submenu-container
+    position: absolute
+    top: 30px
+    display: flex
+    flex-direction: column
+    background: white
+    border: 1px solid grey
+    border-radius: 5px
+    border-top-left-radius: 0
+    z-index: 4
+    .submenu-item
+      display: flex
+      align-items: center
+      padding: 8px 12px
+      cursor: pointer
+      &:first-child
+        border-top-right-radius: 5px
+      &:last-child
+        border-bottom-left-radius: 5px
+        border-bottom-right-radius: 5px
+      &:hover
+        background: #edeeee
+      .submenu-item-color
+        width: 13px
+        height: 13px
+        margin-right: 7px
+        border-radius: 2px

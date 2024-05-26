@@ -1,6 +1,6 @@
 from django.contrib import admin
 from polymorphic.admin import PolymorphicParentModelAdmin, PolymorphicChildModelAdmin, PolymorphicChildModelFilter
-from .models import RoadTrip, Flight, Experience, Place, Visit, Stay
+from .models import Overland, Flight, Experience, Place, Visit, Stay
 
 
 class ExperienceChildAdmin(PolymorphicChildModelAdmin):
@@ -22,9 +22,9 @@ class StayAdmin(ExperienceChildAdmin):
     base_model = Stay
 
 
-@admin.register(RoadTrip)
-class RoadTripAdmin(ExperienceChildAdmin):
-    base_model = RoadTrip
+@admin.register(Overland)
+class OverlandAdmin(ExperienceChildAdmin):
+    base_model = Overland
 
 
 @admin.register(Flight)
@@ -35,7 +35,7 @@ class FlightAdmin(ExperienceChildAdmin):
 @admin.register(Experience)
 class ExperienceParentAdmin(PolymorphicParentModelAdmin):
     base_model = Experience 
-    child_models = (Flight, RoadTrip, Visit, Stay)
+    child_models = (Flight, Overland, Visit, Stay)
     list_filter = (PolymorphicChildModelFilter,)
 
 

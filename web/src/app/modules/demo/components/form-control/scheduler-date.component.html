@@ -1,0 +1,27 @@
+<div  class="scheduler-date"
+      [ngClass]="{'timeline': !standalone, 'right': right, 'disabled': disabled}"
+      (click)="editing=(!disabled && true)"
+      (mouseleave)="editing=false">
+  <div class="viewer" *ngIf="!editing">
+    <div class="text">{{ caption }}</div>
+    <div class="date-container" *ngIf="value">
+      <div class="day-digit">{{ date | date:'dd' }}</div>
+      <div class="day-month-year">
+        <div class="day-text">{{ date | date:'EEEE' }}</div>
+        <div class="month-year">{{ date | date:'LLLL yyyy' }}</div>
+      </div>
+      <div class="hour-container" *ngIf="value.time">{{ date | date:'HH:mm' }}</div>
+    </div>
+  </div>
+
+  <div class="editor" *ngIf="editing">
+    <div class="text">{{ caption }}</div>
+    <app-input
+      [type]="'datetime'"
+      [placeholder]="'Date'"
+      [disabled]="disabled"
+      [(ngModel)]="value">
+    </app-input>
+  </div>
+
+</div>

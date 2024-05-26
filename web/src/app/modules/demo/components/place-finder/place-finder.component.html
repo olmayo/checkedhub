@@ -1,29 +1,52 @@
-<div class="search-form">
-    <div><input type="text" [(ngModel)]="query"/></div>
-    <button (click)="search(query)">Search</button>
-</div>
+<div class="row" *ngFor="let field of _value">
 
-<div class="results" *ngIf="!place">
-    <div class="result" *ngFor="let place of places" (click)="select(place)">
-        <div class="icon">
-            <i class="fa-solid fa-{{ place.icon }}"></i>
+    <!-- Handle -->
+    <div *ngIf="multiple" class="button handle">
+        <i class="fa-solid fa-grip-vertical"></i>
+    </div>
+
+    <!-- Field -->
+    <div class="field">
+
+        <!-- Search Form -->
+        <div class="field-container search-form" *ngIf="!field.place">
+            <input type="text" [(ngModel)]="field.query" (keydown)="submitOnEnter($event, field)"/>
+            <div class="btn-right" (click)="search(field)">
+                <i class="fa-solid fa-search"></i>
+            </div>
         </div>
-        <div class="description">
-            <div class="name">{{ place.name }}</div>
-            <div class="address">{{ place.formattedAddress }}</div>
+
+        <!-- Search Results -->
+        <div class="results" *ngIf="!field.place && field.places?.length">
+            <div class="result" *ngFor="let place of field.places" (click)="select(field, place)">
+                <div class="icon">
+                    <i class="fa-solid fa-{{ place.icon }}"></i>
+                </div>
+                <div class="description">
+                    <div class="name">{{ place.name }}</div>
+                    <div class="address">{{ place.formattedAddress }}</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Selection -->
+        <div class="field-container  selection" *ngIf="field.place">
+            <div class="icon"><i class="fa-solid fa-{{ field.place.icon }}"></i></div>
+            <div class="description">{{ field.place.name }}</div>
+            <div class="btn-right" (click)="select(field, undefined)">
+                <i class="fa-solid fa-pen"></i>
+            </div>
         </div>
     </div>
+    
+    <!-- Delete Row -->
+    <div *ngIf="multiple && _value!.length > 2" class="button delete" (click)="deleteField(field)">
+        <i class="fa-solid fa-trash"></i>
+    </div>
+
 </div>
 
-<div class="result" *ngIf="place">
-    <div class="icon">
-        <i class="fa-solid fa-{{ place.icon }}"></i>
-    </div>
-    <div class="description">
-        <div class="name">{{ place.name }}</div>
-        <div class="address">{{ place.formattedAddress }}</div>
-    </div>
+<!-- Add Step -->
+<div *ngIf="multiple" class="plus" (click)="addField()">
+    <i class="fa-solid fa-plus"></i> Add Destination
 </div>
-
-
-

@@ -7,6 +7,9 @@ class ExperienceViewSet(viewsets.ModelViewSet):
     queryset = Experience.objects.all()
     serializer_class = ExperiencePolymorphicSerializer
 
+    # def perform_create(self, serializer):
+    #     serializer.save(user=self.request.user)
+
 
 class PlaceViewSet(viewsets.ModelViewSet):
     queryset = Place.objects.all()

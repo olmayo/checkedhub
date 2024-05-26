@@ -4,24 +4,34 @@ from polymorphic.models import PolymorphicModel
 
 
 class Place(models.Model):
-    owner = models.ForeignKey(User, on_delete=models.CASCADE)
     name = models.CharField(max_length=255)
-    type = models.CharField(max_length=255)
+    types = models.JSONField(max_length=255, default=list)
     place_id = models.CharField(max_length=255)
-    latitude = models.DecimalField(max_digits=20, decimal_places=15)
-    longitude = models.DecimalField(max_digits=20, decimal_places=15)
+    latitude = models.DecimalField(max_digits=25, decimal_places=20)
+    longitude = models.DecimalField(max_digits=25, decimal_places=20)
     def __str__(self):
         return f"{self.name}"
     class Meta:
         pass
 
 
+class PlacesOrderedManyToManyField(models.ManyToManyField):
+    """This fetches from the join table, then fetches the Places in the fixed id order."""
+    def value_from_object(self, object):
+        rel = getattr(object, self.attname)
+        qry = {self.related.var_name: object}
+        qs = rel.through.objects.filter(**qry).order_by('id')
+        aids = qs.values_list('place_id', flat=True)
+        places = dict((a.pk, a) for a in Place.objects.filter(pk__in=aids))
+        return [places[aid] for aid in aids if aid in places]
+
+
 class Experience(PolymorphicModel):
-    owner = models.ForeignKey(User, on_delete=models.CASCADE)
+    # user = models.ForeignKey(User, on_delete=models.CASCADE)
     name = models.CharField(max_length=200)
     public = models.BooleanField(default=False)
-    start_date = models.DateField()
-    end_date = models.DateField()
+    start_date = models.DateField(blank=True, null=True)
+    end_date = models.DateField(blank=True, null=True)
     start_time = models.TimeField(blank=True, null=True)
     end_time = models.TimeField(blank=True, null=True)
     class Meta:
@@ -34,16 +44,14 @@ class Event(Experience):
         abstract = True
 
 
-class Visit(Experience):
-    place = models.ForeignKey(Place, on_delete=models.CASCADE)
+class Visit(Event):
     def __str__(self):
         return f"Visit {self.place} on {self.start_date}"
     class Meta:
         pass
 
 
-class Stay(Experience):
-    place = models.ForeignKey(Place, on_delete=models.CASCADE)
+class Stay(Event):
     def __str__(self):
         return f"Stay {self.place} from {self.start_date} to {self.end_date}"
     class Meta:
@@ -51,16 +59,15 @@ class Stay(Experience):
 
 
 class Journey(Experience):
-    fr = models.CharField(max_length=200)
-    to = models.CharField(max_length=200)
+    places = PlacesOrderedManyToManyField(Place)
     class Meta:
         abstract = True
 
 
-class RoadTrip(Journey):
+class Overland(Journey):
     polyline = models.TextField(max_length=10000)
     def __str__(self):
-        return f"Road Trip from {self.fr} to {self.to} of {self.start_date}"
+        return f"Overland journey from {self.fr} to {self.to} of {self.start_date}"
     class Meta:
         pass
 

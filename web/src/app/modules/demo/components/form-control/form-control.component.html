@@ -1,0 +1,508 @@
+<!-- Standard Inputs -->
+<div  class="input-block"
+      *ngIf="fieldTypes.includes(type)"
+      [ngClass]="{'notvisible': invisible}">
+
+
+  <!-- Text Field -->
+  <div class="input-group" *ngIf="type==='text'">
+    <input type="text" [(ngModel)]="value" [disabled]="disabled" autocomplete="off">
+    <div class="label" *ngIf="label" [ngClass]="{'not-empty': value}" (click)="setFocusOnInput($event)">{{ label }}</div>
+    <div class="error" *ngIf="errors?.length">{{ errors[0] }}</div>
+  </div>
+
+
+  <!-- Editable Text -->
+  <div class="editable-text" *ngIf="type==='editable-text'">
+    <input #editableText
+           type="text"
+           class="form-control"
+           [(ngModel)]="editedText"
+           autocomplete="off"
+           (focus)="editableTextInputEvent($event)"
+           (blur)="editableTextInputEvent($event)">
+    <div class="button" (click)="editableTextConfirm()">
+      <i class="fa fa-check"></i> Save
+    </div>
+  </div>
+
+
+  <!-- Inline search with option -->
+  <div *ngIf="type==='inline-search'"
+       class="inline-search"
+       [ngClass]="{'focused': !value && searchString}">
+    <mat-form-field class="example-full-width">
+      <mat-label>{{ label }}</mat-label>
+      <input matInput
+             [(ngModel)]="searchString"
+             (ngModelChange)="inlineSearchTrigger(searchString)"
+             [errorStateMatcher]="errorStateMatcher"
+             [disabled]="value"
+             autocomplete="off">
+       <button *ngIf="searchString"
+               class="text-center"
+               matSuffix mat-icon-button aria-label="Clear"
+               (click)="inlineSearchClear()">
+        <span class="text-center"><i class="fa fa-times"></i></span>
+      </button>
+      <mat-error *ngIf="errors">{{ errors[0] }}</mat-error>
+    </mat-form-field>
+    <!-- <fpn-loader *ngIf="searchString && !options"></fpn-loader> -->
+    <div class="options" *ngIf="options && !value">
+      <div *ngIf="searchString && options.length === 0" class="text-center">No Results...</div>
+      <table *ngIf="options.length !== 0" class="table table-hover">
+        <thead>
+          <tr>
+            <th class="text-left" *ngFor="let column of columns">{{ column.verbose }}</th>
+          </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let option of options" (click)="inlineSearchSelect(option)">
+              <td *ngFor="let column of columns">
+                <span *ngIf="!column.subproperty">{{ option[column.property] }}</span>
+                <span *ngIf="column.subproperty">{{ option[column.property][column.subproperty] }}</span>
+              </td>
+            </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+
+  <!-- Input with backend validation -->
+  <div class="validated-input" *ngIf="type==='validated-input'">
+    <mat-form-field>
+      <mat-label>{{ label }}</mat-label>
+      <input matInput
+            [disabled]="disabled || confirmed"
+            [(ngModel)]="validatedInputText"
+            autocomplete="off">
+    </mat-form-field>
+    <div class="action-btn">
+      <button *ngIf="!confirmed"
+           class="button icon-only"
+           type="submit"
+           (click)="validatedInputConfirm()"
+           [ngClass]="{'disabled': disabled}">
+        <i class="fa fa-arrow-right"></i>
+      </button>
+      <div *ngIf="confirmed"
+           class="button icon-only"
+           type="button"
+           (click)="validatedInputClear()"
+           [ngClass]="{'disabled': disabled}">
+        <i class="fa fa-times"></i>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Toggle -->
+  <mat-slide-toggle #toggleField
+                    *ngIf="type==='toggle'"
+                    class="slide-toggle"
+                    [(ngModel)]="value">
+    {{ label }}
+  </mat-slide-toggle>
+
+
+  <!-- Slider -->
+  <div class="slider-container" *ngIf="type==='slider'">
+    <mat-slider #sliderField
+                min="0"
+                max="100"
+                step="5"
+                tickInterval="2"
+                [(ngModel)]="value"
+                thumbLabel>
+    </mat-slider>
+  </div>
+
+
+  <!-- Password Field -->
+  <mat-form-field *ngIf="type==='password'">
+    <input matInput placeholder="{{ label }}"
+           [(ngModel)]="value"
+           [type]="'password'"
+           [disabled]="disabled">
+    <mat-error *ngIf="errors">{{ errors[0] }}</mat-error>
+  </mat-form-field>
+
+
+  <!-- Number -->
+  <div class="input-group" *ngIf="type==='number'">
+    <input type="number" [(ngModel)]="value" [disabled]="disabled" autocomplete="off">
+    <div class="label" [ngClass]="{'not-empty': value}" (click)="setFocusOnInput($event)">{{ label }}</div>
+    <div class="error">{{ errors[0] }}</div>
+  </div>
+
+
+  <!-- Number - Plus/Minus -->
+  <div *ngIf="type==='number-plus-minus'"
+       class="number-plus-minus"
+       [ngClass]="{'horizontal': horizontal}">
+    <div class="label" *ngIf="label">{{ label }}</div>
+    <div class="btn-icon" (click)="numberArrowClick(true)">
+      <i class="fa-solid fa-{{ horizontal ? 'plus' : 'chevron-up' }}"></i>
+    </div>
+    <input type="number" [(ngModel)]="value" />
+    <div class="btn-icon" (click)="numberArrowClick(false)">
+      <i class="fa fa-{{ horizontal ? 'minus' : 'chevron-down' }}"></i>
+    </div>
+  </div>
+
+  <!-- Select -->
+  <!-- <mat-form-field *ngIf="type==='select'">
+    <mat-label>{{ label }}</mat-label>
+    <mat-select #selectField
+                [(ngModel)]="value"
+                [disabled]="disabled"
+                class="select">
+      <ng-container *ngIf="options && options?.length">
+
+        !-- To be removeed and replaced by the FormOptionsGroup implementation --
+        <ng-container *ngIf="options[0]?.constructor.name != 'FormOptionsGroup'">
+          <mat-option *ngFor="let o of options" value="{{ o.id }}" class="select-option">{{ o.name }}</mat-option>
+        </ng-container>
+
+        !-- New implementation with FormOptionsGroup --
+        <ng-container *ngIf="options[0]?.constructor.name == 'FormOptionsGroup'">
+          <ng-container *ngFor="let group of options">
+            <mat-optgroup [label]="group.name" *ngIf="group.options?.length">
+              <mat-option *ngFor="let o of group.options" value="{{ o.id }}">{{ o.name }}</mat-option>
+            </mat-optgroup>
+          </ng-container>
+        </ng-container>
+
+      </ng-container>
+    </mat-select>
+  </mat-form-field> -->
+
+  <!-- Radio -->
+  <!-- <div class="radio" *ngIf="type==='radio'">
+    <div class="label">{{ label }}</div>
+    <mat-radio-group class="radio-group"
+                     [(ngModel)]="value">
+      <mat-radio-button *ngFor="let option of options"
+                        class="radio-button"
+                        value="{{option.id}}">
+        <span [innerHTML]="option.name"></span>
+      </mat-radio-button>
+    </mat-radio-group>
+  </div> -->
+
+
+  <!-- Button Toggles -->
+  <!-- <div class="toggles" *ngIf="type==='toggles'">
+    <div class="label" *ngIf="label">{{ label }}</div>
+    <mat-button-toggle-group #togglesField [(ngModel)]="value">
+      <mat-button-toggle *ngFor="let option of options"
+                         value="{{option.id}}">
+        {{ option.name }}
+      </mat-button-toggle>
+    </mat-button-toggle-group>
+  </div> -->
+
+
+  <!-- Dropdown -->
+  <div class="dropdown" *ngIf="type==='dropdown'">
+    <div class="button" [ngClass]="{'isOpen': isOpen}" (click)="isOpen=!isOpen" [style.background]="selectedOption?.color">
+      <div class="caption">{{ selectedOption?.name }}</div>
+      <div class="icon"><i class="fa fa-chevron-down"></i></div>
+    </div>
+    <div  *ngIf="isOpen" class="submenu-container">
+      <div *ngFor="let option of options" class="submenu-item" (click)="dropdownSetValue(option)">
+        <div class="submenu-item-color" [style.background]="option.color">&nbsp;</div>
+        <div class="submenu-item-caption">{{ option.name }}</div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Checkbox -->
+  <mat-checkbox #checkboxField
+                *ngIf="type==='checkbox'"
+                [checked]="value"
+                (change)="value = $event.checked"
+                [disabled]="disabled"
+                [disableRipple]="true">
+    {{ label }}
+  </mat-checkbox>
+
+
+  <!-- Checkboxes -->
+  <div #checkboxesField class="checkboxes" *ngIf="type==='checkboxes'">
+    <div class="label" *ngIf="label">{{ label }}</div>
+    <mat-checkbox *ngFor="let option of options"
+                  [value]="natural ? option.name : option.id"
+                  [checked]="option.checked"
+                  (change)="checkboxEvent($event)"
+                  [disableRipple]="true">
+      {{ option.name }}
+    </mat-checkbox>
+  </div>
+
+
+  <!-- User -->
+  <div class="user" *ngIf="type==='user'">
+    <mat-form-field class="example-full-width">
+      <input #userField
+             matInput placeholder="{{ label }}"
+             (keyup)="userEvent('search', $event)"
+             (focus)="userEvent('focus', $event)"
+             (blur)="userEvent('blur', $event)"
+             [(ngModel)]="userSearchStr"
+             [errorStateMatcher]="errorStateMatcher"
+             [disabled]="disabled"
+             autocomplete="off">
+      <mat-error *ngIf="errors">{{ errors[0] }}</mat-error>
+    </mat-form-field>
+    <div class="user-options" *ngIf="hasFocus||mouseover" (mouseenter)="mouseover=true" (mouseleave)="mouseover=false">
+      <div *ngIf="!userSearchRes?.length && userSearchStr.length <= 2">Search by name or email</div>
+      <div *ngIf="!userSearchRes?.length && userSearchStr.length > 2">No user found</div>
+      <table class="table table-sm table-hover" *ngIf="userSearchRes?.length">
+        <tbody>
+          <tr *ngFor="let user of userSearchRes" (click)="userEvent('select', user)">
+            <td>{{ user?.first_name }} {{ user?.last_name }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+
+  <!-- Badge Select -->
+  <div #badgesField
+       class="badges"
+       *ngIf="type==='badges'"
+       (mouseenter)="badgeOpenClose(true)"
+       (mouseleave)="badgeOpenClose(false)">
+    <span class="badge badge-secondary"
+          *ngFor="let option of options"
+          [@showHide]="value == option.id || isOpen ? 'show' : 'hide'"
+          [style.background]="option.color"
+          (click)="value=option.id;badgeOpenClose(false)">
+      {{ option.name }}
+    </span>
+  </div>
+
+
+  <!-- Date -->
+  <mat-form-field *ngIf="type==='date'">
+    <input #dateField
+           matInput
+           [matDatepicker]="picker"
+           placeholder="{{ placeholder }}"
+           [(ngModel)]="dateFieldValue"
+           (ngModelChange)="updateDateValue()"
+           (click)="picker.open()"
+           [disabled]="disabled" />
+    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+    <mat-datepicker #picker></mat-datepicker>
+  </mat-form-field>
+
+
+  <!-- Time - Single -->
+  <div *ngIf="type==='time'" class="time-field" [ngClass]="{'inline': inlineLabel}">
+    <div class="label" *ngIf="label">{{ label }}</div>
+    <div class="value-container">
+      <div class="hour-field">
+        <app-input [type]="'number-plus-minus'"
+                   [min]="0" [max]="hours24 ? 23 : 12"
+                   [(ngModel)]="hour"
+                   (ngModelChange)="updateTimeValue()"
+                   (valueChangeEvent)="timeChangeEventHandler('hour', $event)">
+        </app-input>
+      </div>
+      <div class="separator">:</div>
+      <div class="minutes-field">
+        <app-input [type]="'number-plus-minus'"
+                   [min]="0" [max]="60" [step]="step"
+                   [(ngModel)]="minute"
+                   (ngModelChange)="updateTimeValue()"
+                   (valueChangeEvent)="timeChangeEventHandler('min', $event)">
+        </app-input>
+      </div>
+      <div class="am-pm" *ngIf="!hours24">
+        <div class="btn-icon" (click)="timeAmPmToggle()">
+          <i class="fa-solid fa-chevron-up"></i>
+        </div>
+        <div>
+          <span *ngIf="!pm">AM</span>
+          <span *ngIf="pm">PM</span>
+        </div>
+        <div class="btn-icon" (click)="timeAmPmToggle()">
+          <i class="fa fa-chevron-down"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Time - Range -->
+  <div *ngIf="type==='timerange'" class="time-range-field">
+    <div class="hour-field">
+      <app-input [type]="'time'"
+                 [label]="'From'"
+                 [step]="step"
+                 [hours24]="hours24"
+                 [(ngModel)]="value.from"
+                 (ngModelChange)="timeRangeChange()">
+      </app-input>
+    </div>
+    <div class="minutes-field">
+      <app-input [type]="'time'"
+                 [label]="'Until'"
+                 [step]="step"
+                 [hours24]="hours24"
+                 [(ngModel)]="value.until"
+                 (ngModelChange)="timeRangeChange()">
+      </app-input>
+    </div>
+  </div>
+
+
+  <!-- Date & Time - Single -->
+  <div *ngIf="type==='datetime'"
+       class="calendar-container"
+       [ngClass]="{'horizontal': horizontal}">
+    <div class="calendar-label" *ngIf="label">{{ label }}</div>
+    <mat-calendar #datetimeField
+                  [selected]="dateDate"
+                  (selectedChange)="datetimeSetValue($event, dateTime, true)">
+    </mat-calendar>
+    <div class="time" *ngIf="timeSelector || allDaySelector">
+      <div class="all-day" *ngIf="allDaySelector">
+        <!-- <mat-checkbox [(ngModel)]="allDay"
+                      (ngModelChange)="onDateTimeAllDayChange($event)"
+                      [color]="'primary'">All Day
+        </mat-checkbox> -->
+      </div>
+      <div class="hour-minute" [ngClass]="{'hidden': allDay}">
+        <app-input [type]="'time'"
+                   [hours24]="hours24"
+                   [(ngModel)]="dateTime"
+                   (ngModelChange)="datetimeSetValue(dateDate, $event, true)">
+        </app-input>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Date & Time - Range -->
+  <div class="date-time-range" *ngIf="type==='datetimerange'">
+    <h3 *ngIf="label">{{ label }}</h3>
+    <div class="options">
+      <app-input [type]="'checkbox'"
+                 [label]="'Same Day'"
+                 [(ngModel)]="datetimerangeSameDay"
+                 (ngModelChange)="datetimerangeOnChange('same_day', $event)">
+      </app-input>
+      <app-input *ngIf="allDaySelector"
+                 [type]="'checkbox'"
+                 [label]="'All Day'"
+                 [(ngModel)]="datetimerangeAllDay"
+                 (ngModelChange)="datetimerangeOnChange('all_day', $event)">
+      </app-input>
+    </div>
+    <div class="date-timerange">
+      <app-input [type]="'datetime'"
+                 [label]="datetimerangeSameDay ? 'Date' : 'From'"
+                 [timeSelector]="!datetimerangeSameDay"
+                 [allDaySelector]="false"
+                 [hours24]="hours24"
+                 [(ngModel)]="datetimerangeFrom"
+                 (ngModelChange)="datetimerangeOnChange('from', $event)">
+      </app-input>
+
+      <app-input *ngIf="!datetimerangeAllDay && datetimerangeSameDay"
+                 [type]="'timerange'"
+                 [hours24]="hours24"
+                 [(ngModel)]="datetimerangeTimeRange"
+                 (ngModelChange)="datetimerangeOnChange('timerange', $event)">
+      </app-input>
+
+      <app-input *ngIf="!datetimerangeSameDay"
+                 [type]="'datetime'"
+                 [label]="'Until'"
+                 [allDaySelector]="false"
+                 [hours24]="hours24"
+                 [(ngModel)]="datetimerangeUntil"
+                 (ngModelChange)="datetimerangeOnChange('until', $event)">
+      </app-input>
+
+    </div>
+
+  </div>
+
+
+  <!-- Date Range -->
+  <div *ngIf="type==='daterange'">
+    <div class="calendar-label" *ngIf="label">{{ label }}</div>
+    <mat-calendar #dateRangeField
+                  [selected]="value"
+                  (selectedChange)="onDateRangeChange($event)">
+    </mat-calendar>
+  </div>
+
+
+  <!-- Schedule + Progress -->
+  <div  #scheduler class="scheduler" *ngIf="type==='scheduler'"
+        [ngClass]="{'editing': scheduleEdit, 'progress-hidden': !schedulerProgress}"
+        (click)="scheduleEdit=true" (mouseleave)="scheduleEdit=false">
+    <div *ngIf="label">{{ label }}</div>
+    <div class="scheduler-container">
+      <div class="timeline-container">
+        <div class="timeline"></div>
+        <div class="circle circle-left"></div>
+        <div class="circle circle-right"></div>
+        <div #circleprogress class="circle circle-progress"></div>
+        <div #nowmarker class="now-marker text-center">NOW</div>
+      </div>
+      <div  #progressslider *ngIf="schedulerProgress"
+            class="progress-slider" [ngClass]="{'disabled': disabled}"
+            (mousedown)="schedulerMouseDownEvent($event)">
+        <div class="slider-title">Progress</div>
+        <div class="slider-value">{{ value?.progress | number:'1.0-0' }} %</div>
+      </div>
+      <div class="date-start">
+        <app-scheduler-date [caption]="'start date'"
+                            [standalone]="false"
+                            [disabled]="disabled"
+                            [(ngModel)]="value.from"
+                            (ngModelChange)="schedulerDateChanged('from', $event)"
+                            (allDayChange)="schedulerAllDayChanged($event)">
+        </app-scheduler-date>
+      </div>
+      <div class="date-end">
+        <app-scheduler-date [caption]="'end date'"
+                            [standalone]="false"
+                            [disabled]="disabled"
+                            [right]="true"
+                            [ngModel]="value.until"
+                            (ngModelChange)="schedulerDateChanged('until', $event)"
+                            (allDayChange)="schedulerAllDayChanged($event)">
+        </app-scheduler-date>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Captcha -->
+  <!-- <div class="captcha" *ngIf="type==='captcha'">
+    <ngx-recaptcha2 #captchaElem
+                    *ngIf="!captchaSuccess"
+                    [siteKey]="'6LcfIHElAAAAAKkEIBmZA0w_B7sgAYMV4wGaHcvN'"
+                    (success)="handleCaptchaSuccess($event)"
+                    [useGlobalDomain]="false"
+                    [size]="'normal'"
+                    [hl]="'en'"
+                    [theme]="'light'"
+                    [type]="'image'">
+    </ngx-recaptcha2>
+  </div> -->
+
+
+  <!-- Error -->
+  <p class="text-danger my-2" *ngIf="type==='error' && errors">{{ errors[0] }}</p>
+
+</div>

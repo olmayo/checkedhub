@@ -6,7 +6,6 @@ export class PointOfInterest {
     latitude?: number;
     longitude?: number;
     types?: Array<string>;
-    location?: any;
     formattedAddress?: string;
 
     constructor(place?: any) {
@@ -17,6 +16,13 @@ export class PointOfInterest {
         if (this.types?.includes('airport')) return 'plane-departure';
         if (this.types?.includes('restaurant')) return 'utensils';
         return 'location-dot';
+    }
+
+    get location() {
+        return { 
+            lat: this.latitude,
+            lng: this.longitude
+        }
     }
     
 }
