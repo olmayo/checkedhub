@@ -26,8 +26,7 @@ SECRET_KEY = 'django-insecure-wda6hp+*4jblyl@gt4aqa)#fe*yd#rc*z(%^9)$&x!e9q*po&e
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG') if os.getenv('POSTGRES_NAME') else False
 ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'api.checkedhub.com']
-CSRF_TRUSTED_ORIGINS = ['https://api.checkedhub.com', ]
-
+CSRF_TRUSTED_ORIGINS = ['https://api.checkedhub.com', 'https://www.checkedhub.com', 'https://checkedhub.com']
 CORS_ORIGIN_ALLOW_ALL = True
 
 
