@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -23,9 +24,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-wda6hp+*4jblyl@gt4aqa)#fe*yd#rc*z(%^9)$&x!e9q*po&e'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-ALLOWED_HOSTS = []
+DEBUG = os.getenv('DEBUG') if os.getenv('POSTGRES_NAME') else False
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'api.checkedhub.com']
+CSRF_TRUSTED_ORIGINS = ['https://api.checkedhub.com', ]
 
 CORS_ORIGIN_ALLOW_ALL = True
 
@@ -85,6 +86,17 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+if os.getenv('POSTGRES_NAME'):
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'NAME': os.getenv('POSTGRES_NAME'), 
+            'USER': os.getenv('POSTGRES_USER'), 
+            'PASSWORD': os.getenv('POSTGRES_PASSWORD'),
+            'HOST': os.getenv('POSTGRES_HOST'), 
+            'PORT': '5432',
+        }
+    }
 
 
 # Password validation
