@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
+import { SocialAuthService } from "@abacritt/angularx-social-login";
+import { FacebookLoginProvider } from "@abacritt/angularx-social-login";
 
 @Component({
   selector: 'auth-login-signup',
@@ -11,7 +13,8 @@ export class LoginSignupComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private authService: AuthService
+    private authService: AuthService,
+    private auth2Service: SocialAuthService
   ) { }
 
   ngOnInit(): void {
@@ -22,8 +25,20 @@ export class LoginSignupComponent implements OnInit {
         this.authService.activate(email, activationToken);
       }
     });
+
+    this.auth2Service.authState.subscribe((user) => {
+      console.log('USER', user);
+      // this.user = user;
+      // this.loggedIn = (user != null);
+    });
   }
 
-  
+  // signInWithFB(): void {
+  //   this.auth2Service.signIn(FacebookLoginProvider.PROVIDER_ID);
+  // }
+
+  // signOut(): void {
+  //   this.auth2Service.signOut();
+  // }
 
 }

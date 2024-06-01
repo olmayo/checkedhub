@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'polymorphic',
     'rest_framework',
+    'social_django',
     'checkedhub'
 ]
 
@@ -140,3 +141,29 @@ STATIC_ROOT = os.path.join(BASE_DIR, "static/")
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+## Social Auth Configuration
+SOCIAL_AUTH_JSONFIELD_ENABLED = True
+# SOCIAL_AUTH_REQUIRE_POST = True
+AUTHENTICATION_BACKENDS = [
+    # 'social_core.backends.open_id.OpenIdAuth',
+    # 'social_core.backends.google.GoogleOpenId',
+    'social_core.backends.google.GoogleOAuth2',
+    # 'social_core.backends.google.GoogleOAuth',
+    # 'social_core.backends.twitter.TwitterOAuth',
+    # 'social_core.backends.yahoo.YahooOpenId',
+    'django.contrib.auth.backends.ModelBackend'
+]
+
+LOGIN_URL = 'login'
+LOGOUT_URL = 'logout'
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/'
+
+
+# LOCAL SETTINGS
+try:
+    from .settings_local import *
+except ImportError:
+    pass
