@@ -5,7 +5,7 @@ import { CrudService } from '../../api/crud.service';
 @Injectable({
   providedIn: 'root'
 })
-export class ExperiencesService extends CrudService {
+export class ExperienceService extends CrudService {
 
   override endpoint?: string = 'experiences';
   override model?: any = Experience;

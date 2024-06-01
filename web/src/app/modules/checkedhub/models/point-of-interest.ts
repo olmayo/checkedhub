@@ -22,7 +22,7 @@ export class PointOfInterest {
         return { 
             lat: this.latitude,
             lng: this.longitude
-        }
+        };
     }
     
 }

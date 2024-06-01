@@ -1,30 +1,63 @@
-import { Component, ElementRef, ViewChild, OnInit, AfterViewInit } from '@angular/core';
+import { Component, ElementRef, ViewChild, OnInit, AfterViewInit, Input, OnChanges } from '@angular/core';
 import { Loader } from "@googlemaps/js-api-loader";
-import { ExperiencesService } from '../../services/experience.service';
-import { PlacesService } from '../../services/place.service';
+import { PlaceService } from '../../services';
 
 @Component({
-  selector: 'app-map',
+  selector: 'ch-map',
   templateUrl: './map.component.html',
   styleUrls: ['./map.component.sass']
 })
 export class MapComponent implements OnInit, AfterViewInit {
 
   @ViewChild('gmapContainer', {static: false}) gmap!: ElementRef;
+
+  @Input() experiences: any;
+  @Input() poi: any;
+
   map?: google.maps.Map;
   savedRoute?: any;
 
   constructor(
-    private experiencesService: ExperiencesService,
-    private placesService: PlacesService
+    private placeService: PlaceService
   ) {}
 
   ngOnInit(): void {
-    this.placesService.get().subscribe();
+    this.placeService.get().subscribe();
   }
 
   ngAfterViewInit() {
     this.mapInitializer();
+  }
+
+  ngOnChanges() {
+
+    if (!this.map) return;
+
+    // Add experiences markers
+    let bounds = new google.maps.LatLngBounds();
+    this.experiences?.forEach((experience: any) => {
+      if (experience.place) { 
+        this.drawMarker(experience.place.latitude, experience.place.longitude);
+        bounds.extend(new google.maps.LatLng(experience.place.latitude, experience.place.longitude));
+      }
+      if (experience.polyline) this.drawPolyline(experience.polyline);
+    });
+
+    // Add POI markers
+    if (this.poi) bounds = new google.maps.LatLngBounds();
+    this.poi?.forEach((poi: any) => {
+      this.drawMarker(poi.latitude, poi.longitude);
+      bounds.extend(new google.maps.LatLng(poi.latitude, poi.longitude));
+    });
+
+    // Position & Zoom
+    this.map.fitBounds(bounds);
+    const listener = google.maps.event.addListener(this.map, 'idle', () => {
+      let zoom = this.map?.getZoom();
+      if (!zoom) return;
+      if (zoom > 16) this.map!.setZoom(16);
+      google.maps.event.removeListener(listener);
+    });
   }
 
   mapInitializer() {
@@ -38,13 +71,6 @@ export class MapComponent implements OnInit, AfterViewInit {
       this.map = new Map(document.getElementById("map") as HTMLElement, {
         center: { lat: -34.397, lng: 150.644 },
         zoom: 2
-      });
-      this.experiencesService.get().subscribe((experiences: any) => {
-        console.log(experiences);
-        experiences.forEach((experience: any) => {
-          if (experience.place) this.drawMarker(experience.place.latitude, experience.place.longitude);
-          if (experience.polyline) this.drawPolyline(experience.polyline);
-        });
       });
     });
   }

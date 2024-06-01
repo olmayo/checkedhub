@@ -22,10 +22,10 @@ services:
       - 6900:6900
     environment:
       - DEBUG=True
-      - POSTGRES_HOST=${DATABASE_HOST}
-      - POSTGRES_NAME=${DATABASE_NAME}
-      - POSTGRES_USER=${DATABASE_USER}
-      - POSTGRES_PASSWORD=${DATABASE_PASSWORD}
+      # - POSTGRES_HOST=${DATABASE_HOST}
+      # - POSTGRES_NAME=${DATABASE_NAME}
+      # - POSTGRES_USER=${DATABASE_USER}
+      # - POSTGRES_PASSWORD=${DATABASE_PASSWORD}
     depends_on:
       - db
     volumes:

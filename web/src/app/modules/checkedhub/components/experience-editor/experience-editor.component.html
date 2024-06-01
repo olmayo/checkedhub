@@ -1,0 +1,101 @@
+<div class="form-column">
+    
+    <div class="form">
+
+        <!-- Event vs Journey -->
+        <div class="section">
+            <div class="content">
+                <div class="options">
+                    <div class="option" 
+                        [ngClass]="{'selected': experience.isJourney==false}"
+                        (click)="experience.isJourney=false; updateSuggestedTypes()">
+                        <i class="fa-solid fa-location-dot"></i>
+                        <div class="caption">Event</div>
+                    </div>
+                    <!-- <div class="option" 
+                        [ngClass]="{'selected': experience.isJourney==true}"
+                        (click)="experience.isJourney=true; updateSuggestedTypes()">
+                        <i class="fa-solid fa-globe"></i>
+                        <div class="caption">Journey</div>
+                    </div> -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Location(s) -->
+        <div class="section" *ngIf="experience.isJourney != undefined">
+            <div class="header">
+                <div class="text" *ngIf="!experience.isJourney">Location</div>
+                <div class="text" *ngIf="experience.isJourney">Itinerary</div>
+            </div>
+            <div class="content">
+                <ch-place-finder 
+                    [multiple]="experience.isJourney"
+                    [ngModel]="locations"
+                    (ngModelChange)="locationChange($event)"
+                    (resultsChange)="showPoiOnMap($event)">
+                </ch-place-finder>
+            </div>
+        </div>
+
+        <!-- Experience Type -->
+        <div class="section" *ngIf="suggestedTypes?.length">
+            <div class="header">
+                <div class="text">Type</div>
+            </div>
+            <div class="content">
+                <div class="options">
+                    <div class="option" 
+                        *ngFor="let type of suggestedTypes"
+                        [ngClass]="{'selected': experience.resourcetype==type.resourcetype}"
+                        (click)="selectResourceType(type.resourcetype)">
+                        <i class="fa-solid fa-{{ type.icon }}"></i>
+                        <div class="caption">{{ type.name }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Experience Name -->
+        <div class="section" *ngIf="experience?.resourcetype">
+            <div class="header">
+                <div class="text">Name</div>
+            </div>
+            <div class="content">
+                <input type="text" [(ngModel)]="experience.name" />
+            </div>
+        </div>
+
+        <!-- Date & Time -->
+        <div class="section" *ngIf="experience.resourcetype">
+            <div class="header">
+                <div class="text">Date & Time</div>
+                <div class="button" *ngIf="!datetime" (click)="datetime={}"><i class="fa-solid fa-plus"></i>Add</div>
+                <div class="button" *ngIf="datetime" (click)="datetime=undefined"><i class="fa-solid fa-trash"></i>Remove</div>
+            </div>
+            <div class="content date-time" *ngIf="datetime">
+                <app-input 
+                    [type]="'datetimerange'" 
+                    [ngModel]="datetime"
+                    (ngModelChange)="datetimeChange($event)">
+                </app-input>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Actions -->
+    <div class="actions">
+        <div class="button" (click)="resetForm()">
+            <i class="fa-solid fa-trash"></i>Clear
+        </div>
+        <div class="button" (click)="save(experience)" [ngClass]="{'disabled': !experience.isValid}">
+            <i class="fa-solid fa-save"></i>Save
+        </div>
+    </div>
+
+</div>
+
+<div class="map">
+    <ch-map [experiences]="experiences" [poi]="poi"></ch-map>
+</div>

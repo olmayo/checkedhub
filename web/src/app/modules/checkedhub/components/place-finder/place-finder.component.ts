@@ -1,10 +1,10 @@
-import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, forwardRef } from '@angular/core';
-import { Loader } from "@googlemaps/js-api-loader";
-import { PointOfInterest } from '../../models/point-of-interest';
+import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, forwardRef } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { Loader } from "@googlemaps/js-api-loader";
+import { PointOfInterest } from '../../models';
 
 @Component({
-  selector: 'app-place-finder',
+  selector: 'ch-place-finder',
   templateUrl: './place-finder.component.html',
   styleUrls: ['./place-finder.component.sass'],
   providers: [     
@@ -18,6 +18,7 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 export class PlaceFinderComponent implements ControlValueAccessor, OnInit, OnChanges, OnDestroy {
 
     @Input() multiple: boolean = false;
+    @Output() resultsChange: EventEmitter<PointOfInterest[]> = new EventEmitter(); 
 
     ngOnInit(): void {
       window.addEventListener('keydown', this.handleEscapeKey);
@@ -84,6 +85,7 @@ export class PlaceFinderComponent implements ControlValueAccessor, OnInit, OnCha
           poi.formattedAddress = x.formattedAddress;
           return poi;
         });
+        this.resultsChange.emit(field.places);
       });
     }
 

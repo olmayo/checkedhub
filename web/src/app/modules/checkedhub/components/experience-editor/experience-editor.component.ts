@@ -1,15 +1,16 @@
-import { Component, Input } from '@angular/core';
-import { Experience } from '../../models/experience';
-import { ExperiencesService } from '../../services/experience.service';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Experience } from '../../models';
+import { ExperienceService } from '../../services';
 
 @Component({
-  selector: 'app-experience-editor',
+  selector: 'ch-experience-editor',
   templateUrl: './experience-editor.component.html',
   styleUrls: ['./experience-editor.component.sass']
 })
 export class ExperienceEditorComponent {
 
     @Input() experience: Experience = new Experience();
+    @Output() poiChange: EventEmitter<any> = new EventEmitter();
 
     locations: any;
     suggestedTypes?: Array<any>;
@@ -22,9 +23,11 @@ export class ExperienceEditorComponent {
       { journey: true, name: 'Overland', icon: 'car', resourcetype: 'Overland' }
     ];
     datetime?: any;
+    experiences?: any;
+    poi?: any;
 
     constructor(
-      private experienceService: ExperiencesService
+      private experienceService: ExperienceService
     ) {}
 
     save(experience: Experience) {
@@ -44,6 +47,12 @@ export class ExperienceEditorComponent {
       if (this.experience.isJourney) this.experience.places = this.locations;
       if (!this.experience.isJourney) this.experience.place = this.locations;
       this.updateSuggestedTypes();
+      this.showPoiOnMap(this.locations);
+    }
+
+    showPoiOnMap(results: any) {
+      this.poi = results;
+      this.poiChange.emit(results);
     }
 
     datetimeChange(datetime: any) {

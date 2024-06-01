@@ -8,8 +8,8 @@ import { AuthModule } from './modules/auth/auth.module';
 import { AuthInterceptor } from './modules/auth/auth.interceptor';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { EnvService } from './env/env.service';
-import { DemoModule } from './modules/demo/demo.module';
 import { routes } from './app.routing';
+import { CheckedhubModule } from './modules/checkedhub/checkedhub.module';
 
 @NgModule({
   imports: [
@@ -18,7 +18,7 @@ import { routes } from './app.routing';
     RouterModule.forRoot(routes),
     BrowserAnimationsModule,
     AuthModule,
-    DemoModule
+    CheckedhubModule
   ],
   declarations: [
     AppComponent
