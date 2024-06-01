@@ -11,11 +11,11 @@ export const routes: Routes = [
     component: LoginSignupComponent
   },
   {
-    path: '',
+    path: 'add',
     component: ExperienceEditorComponent
   },
   {
-    path: 'map',
+    path: '',
     component: HomeComponent
   }
 ];
