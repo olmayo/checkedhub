@@ -10,7 +10,7 @@ pipeline {
         stage('Configure') {
             steps {
                 dir("${workspace}") {
-                    // sh 'cd api; ./configure.sh ../prod/.env'
+                    sh 'cd api; ./configure.sh ../prod/.env'
                     sh 'cd web; ./configure.sh ../prod/.env'
                 }
             }
