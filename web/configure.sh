@@ -8,6 +8,7 @@ else
 fi
 set -o allexport
 source "$ENV_FILE"
+source "/secrets/secrets.env"
 set +o allexport
 
 # Copy template file to target env file
