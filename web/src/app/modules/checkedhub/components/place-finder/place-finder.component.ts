@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, f
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { Loader } from "@googlemaps/js-api-loader";
 import { PointOfInterest } from '../../models';
+import { EnvService } from 'src/app/env/env.service';
 
 @Component({
   selector: 'ch-place-finder',
@@ -19,6 +20,10 @@ export class PlaceFinderComponent implements ControlValueAccessor, OnInit, OnCha
 
     @Input() multiple: boolean = false;
     @Output() resultsChange: EventEmitter<PointOfInterest[]> = new EventEmitter(); 
+
+    constructor(
+      private envService: EnvService
+    ) {}
 
     ngOnInit(): void {
       window.addEventListener('keydown', this.handleEscapeKey);
@@ -63,7 +68,7 @@ export class PlaceFinderComponent implements ControlValueAccessor, OnInit, OnCha
     // Component Logic
     search(field: any) {
       const loader = new Loader({
-        apiKey: "AIzaSyAKS6nVQRipLHPqBa90uKbkq3Ljs-gMzGI",
+        apiKey: this.envService.google_api_key,
         version: "weekly",
         libraries: ["geometry"]
       });

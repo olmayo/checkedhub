@@ -11,4 +11,8 @@ export class EnvService {
     return `${env.backend_prot}://${env.backend_host}${ port ? `:${port}` : '' }/`;
   }
 
+  get google_api_key() { 
+    return env.google_api_key; 
+  }
+
 }

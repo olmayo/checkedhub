@@ -1,6 +1,7 @@
 import { Component, ElementRef, ViewChild, OnInit, AfterViewInit, Input, OnChanges } from '@angular/core';
 import { Loader } from "@googlemaps/js-api-loader";
 import { PlaceService } from '../../services';
+import { EnvService } from 'src/app/env/env.service';
 
 @Component({
   selector: 'ch-map',
@@ -18,6 +19,7 @@ export class MapComponent implements OnInit, AfterViewInit {
   savedRoute?: any;
 
   constructor(
+    private envService: EnvService,
     private placeService: PlaceService
   ) {}
 
@@ -62,7 +64,7 @@ export class MapComponent implements OnInit, AfterViewInit {
 
   mapInitializer() {
     const loader = new Loader({
-      apiKey: "AIzaSyAKS6nVQRipLHPqBa90uKbkq3Ljs-gMzGI",
+      apiKey: this.envService.google_api_key,
       version: "weekly",
       libraries: ["geometry"]
     });
