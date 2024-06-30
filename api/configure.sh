@@ -6,9 +6,19 @@ if [ -n "$1" ]; then
 else
     ENV_FILE=../.env
 fi
+
+# Load configuration files (if file exists)
 set -o allexport
-source "$ENV_FILE"
-source "/secrets/secrets.env"
+if [ -f "$ENV_FILE" ]; then
+    source "$ENV_FILE"
+else
+    echo "Error: Environment file $ENV_FILE not found. Continuing without..."
+fi
+if [ -f "/secrets/secrets.env" ]; then
+    source "/secrets/secrets.env"
+else
+    echo "Error: Secrets file /secrets/secrets.env not found. Continuing without..."
+fi
 set +o allexport
 
 # Copy template file to target env file
